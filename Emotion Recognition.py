@@ -16,7 +16,7 @@ Original file is located at
 # ------------------------------
 
 # Install dependencies (run once in Colab)
-!pip install -q librosa imbalanced-learn scikit-learn joblib numpy pandas tqdm xgboost
+
 
 # Imports
 import os, sys
