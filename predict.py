@@ -11,6 +11,15 @@ SELECTORS = ART["per_mod_selectors"]
 PCAS = ART.get("per_mod_pcas", {}) or {}
 MODALITIES = [name for (name, _, _) in ART["col_splits"]]  # order matters
 
+# The saved artifact did not include the PCA used for the face modality, so it was
+# rebuilt from the training data and stored as plain arrays (pca_face.npz).
+NPZ_PCAS = {}
+for _name in MODALITIES:
+    _p = os.path.join(HERE, f"pca_{_name}.npz")
+    if os.path.exists(_p):
+        _z = np.load(_p)
+        NPZ_PCAS[_name] = {"mean": _z["mean"], "components": _z["components"]}
+
 
 # ---- same augmentation functions as in training ----
 def _as_2d(X):
@@ -86,6 +95,8 @@ def predict_features(feats):
         X = SCALERS[name].transform(X)
         if name in PCAS:
             X = PCAS[name].transform(X)
+        elif name in NPZ_PCAS:
+            X = (X - NPZ_PCAS[name]["mean"]) @ NPZ_PCAS[name]["components"].T
         X = SELECTORS[name].transform(X)
         parts.append(X)
     n = min(p.shape[0] for p in parts)
