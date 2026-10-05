@@ -1,8 +1,9 @@
 numpy
 pandas
-scikit-learn
-imbalanced-learn
-tqdm
+scipy
 joblib
 xgboost
-scipy
+streamlit
+scikit-learn
+# Optional but recommended: pin scikit-learn to the version used for training,
+# e.g. replace the "scikit-learn" line above with "scikit-learn==1.6.1"
